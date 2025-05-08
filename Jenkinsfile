@@ -1,32 +1,20 @@
 pipeline {
-  agent any
-  environment {
-    SONARQUBE_ENV = 'sonar'            // Nom du serveur Sonar configuré dans Jenkins
+  agent {
+    docker {
+      image 'maven:3.8.6-openjdk-11'
+      args  '-v $HOME/.m2:/root/.m2'   // pour conserver le cache Maven local
+    }
   }
   stages {
-    // stage('Checkout') {
-    //   steps { checkout scm }
-    // }
-
-    stage("Code"){
-            steps{
-                git url: "https://github.com/aliwarou/projet-si-jenkins" , branch: "main"
-                echo "Code Cloned Successfully"
-            }
-        }
-
-   
-
-    stage('Analyse SonarQube (SAST)') {
+    stage('Build') {
       steps {
-        withSonarQubeEnv(SONARQUBE_ENV) {
-          echo "Analysise Successfully"
-          sh 'mvn clean verify sonar:sonar'
-        }
+        sh 'mvn -B -DskipTests clean package'
       }
-      
     }
-
-   
+  
   }
 }
+
+
+
+
