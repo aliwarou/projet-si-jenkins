@@ -1,47 +1,20 @@
-pipeline {
-  agent any
-  environment {
-    SONARQUBE_ENV = 'sonar'            
-    DEP_CHECK_OUT = 'reports/dependency-check-report' 
-  }
-  stages {
-    stage('Checkout') {
-      steps { checkout scm }
+agent any
+    environment{
+        SONAR_HOME = tool "Sonar"
     }
-
-    stage('Analyse dépendances (OWASP Dependency‑Check)') {
-      steps {
-        // Génère un rapport HTML et XML
-        sh """
-          dependency-check \
-            --project my-app \
-            --format ALL \
-            --out ${env.DEP_CHECK_OUT}
-        """
-      }
-      post {
-        always {
-          // Archive les rapports pour consultation dans Jenkins
-          archiveArtifacts artifacts: "${env.DEP_CHECK_OUT}/**/*.html, ${env.DEP_CHECK_OUT}/**/*.xml", fingerprint: true
+    stages {
+        
+        stage("Code"){
+            steps{
+                git url: "https://github.com/LondheShubham153/node-todo-cicd.git" , branch: "master"
+                echo "Code Cloned Successfully"
+            }
         }
-      }
+        stage("SonarQube Analysis"){
+            steps{
+               withSonarQubeEnv("Sonar"){
+                   sh "$SONAR_HOME/bin/sonar-scanner -Dsonar.projectName=nodetodo -Dsonar.projectKey=nodetodo -X"
+               }
+            }
+        }
     }
-
-    stage('Analyse SonarQube (SAST)') {
-      steps {
-        withSonarQubeEnv(SONARQUBE_ENV) {
-          // Pour un projet Maven :
-          sh './mvnw clean verify sonar:sonar'
-        }
-      }
-      post {
-        always {
-          // on peut archiver le résumé Sonar (scanner-report.json) si besoin
-          archiveArtifacts artifacts: 'target/sonar/report-task.txt', fingerprint: true
-        }
-      }
-    }
-
-    
-  }
-}
