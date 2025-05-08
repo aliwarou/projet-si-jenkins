@@ -6,7 +6,8 @@ pipeline {
     DEP_CHECK_OUT = 'reports/dependency-check-report' 
   }
   tools {
-    maven 'maven'            
+    maven 'maven'
+    vd 'vd'
   }
   stages {
 
