@@ -11,12 +11,18 @@ pipeline {
   stages {
 
 
-  stage("OWASP"){
-            steps{
-                dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'vd'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-            }
-        }
+ stage("OWASP") {
+  steps {
+    // Invoke Dependency‑Check en lui passant votre credential NVD API Key
+    dependencyCheck(
+      odcInstallation: 'vd',
+      additionalArguments: '--scan ./',
+      nvdCredentialsId: 'nvd-api-key'    // ← votre ID de credential Jenkins
+    )
+    // Puis publication du rapport
+    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+  }
+}
     
     stage('Analyse SonarQube (SAST)') {
       steps {
