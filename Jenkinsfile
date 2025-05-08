@@ -1,14 +1,31 @@
-agent any
-    environment{
-        SONAR_HOME = tool "sonar"
+pipeline {
+  agent any
+  environment {
+    SONARQUBE_ENV = 'MySonarQube'            // Nom du serveur Sonar configuré dans Jenkins
+    DEP_CHECK_OUT = 'reports/dependency-check-report' 
+  }
+  stages {
+    stage('Checkout') {
+      steps { checkout scm }
     }
-    stages {
-        
-        stage("Code"){
-            steps{
-                git url: "https://github.com/aliwarou/projet-si-jenkins.git" , branch: "main"
-                echo "Code Cloned Successfully"
-            }
+
+   
+
+    stage('Analyse SonarQube (SAST)') {
+      steps {
+        withSonarQubeEnv(SONARQUBE_ENV) {
+          // Pour un projet Maven :
+          sh './mvnw clean verify sonar:sonar'
         }
-       
+      }
+      post {
+        always {
+          // on peut archiver le résumé Sonar (scanner-report.json) si besoin
+          archiveArtifacts artifacts: 'target/sonar/report-task.txt', fingerprint: true
+        }
+      }
     }
+
+   
+  }
+}
