@@ -7,28 +7,16 @@ pipeline {
   }
   tools {
     maven 'maven'
-    vd 'vd'
   }
   stages {
 
 
-    stage('Analyse dépendances (OWASP Dependency‑Check)') {
-      steps {
-        // Génère un rapport HTML et XML
-        sh """
-          vd \
-            --project my-app \
-            --format ALL \
-            --out ${env.DEP_CHECK_OUT}
-        """
-      }
-      post {
-        always {
-          // Archive les rapports pour consultation dans Jenkins
-          archiveArtifacts artifacts: "${env.DEP_CHECK_OUT}/**/*.html, ${env.DEP_CHECK_OUT}/**/*.xml", fingerprint: true
+  stage("OWASP"){
+            steps{
+                dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'OWASP'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
         }
-      }
-    }
     
     stage('Analyse SonarQube (SAST)') {
       steps {
