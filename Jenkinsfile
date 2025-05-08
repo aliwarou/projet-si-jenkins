@@ -15,7 +15,7 @@ pipeline {
       steps {
         // Génère un rapport HTML et XML
         sh """
-          dependency-check \
+          vd \
             --project my-app \
             --format ALL \
             --out ${env.DEP_CHECK_OUT}
