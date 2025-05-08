@@ -14,7 +14,7 @@ pipeline {
       steps {
         withSonarQubeEnv(SONARQUBE_ENV) {
           // Pour un projet Maven :
-          sh './mvnw clean verify sonar:sonar'
+          sh 'mvn clean package sonar:sonar'
         }
       }
       post {
