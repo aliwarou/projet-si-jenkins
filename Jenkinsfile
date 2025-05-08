@@ -18,12 +18,7 @@ pipeline {
           sh './mvnw clean verify sonar:sonar'
         }
       }
-      post {
-        always {
-          // on peut archiver le résumé Sonar (scanner-report.json) si besoin
-          archiveArtifacts artifacts: 'target/sonar/report-task.txt', fingerprint: true
-        }
-      }
+      
     }
 
    
