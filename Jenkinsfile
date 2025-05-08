@@ -1,7 +1,7 @@
 pipeline {
   agent any
   tools {
-    maven 'M3'            // nom exact de votre installation Maven
+    maven 'maven'            // nom exact de votre installation Maven
   }
   stages {
     stage('Build') {
