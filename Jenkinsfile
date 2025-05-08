@@ -1,16 +1,36 @@
 pipeline {
   agent any
+
+  environment {
+    SONARQUBE_ENV = 'sonar'            
+    DEP_CHECK_OUT = 'reports/dependency-check-report' 
+  }
   tools {
-    maven 'maven'            // nom exact de votre installation Maven
+    maven 'maven'            
   }
   stages {
-    stage('Build') {
+    
+    stage('Analyse SonarQube (SAST)') {
       steps {
-        sh 'mvn -B -DskipTests clean package'
+        withSonarQubeEnv(SONARQUBE_ENV) {
+          // Pour un projet Maven :
+          sh './mvnw clean verify sonar:sonar'
+        }
+      }
+      post {
+        always {
+          // on peut archiver le résumé Sonar (scanner-report.json) si besoin
+          archiveArtifacts artifacts: 'target/sonar/report-task.txt', fingerprint: true
+        }
       }
     }
-  
+
+
+
+    
   }
+
+  
 }
 
 
