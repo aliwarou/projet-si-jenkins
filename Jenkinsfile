@@ -53,7 +53,7 @@ pipeline {
 
   environment {
     SONARQUBE_ENV = 'sonar'
-    NVD_API_KEY     = credentials('nvd-api-key') 
+    NVD_API_KEY   = credentials('nvd-api-key') 
   }
 
   tools {
@@ -61,8 +61,8 @@ pipeline {
   }
 
   
-
   stages {
+
     stage('Checkout') {
       steps {
         checkout scm
@@ -93,7 +93,7 @@ pipeline {
     stage('SonarQube Analysis') {
       steps {
         withSonarQubeEnv(SONARQUBE_ENV) {
-          sh 'mvn -B sonar:sonar'
+          sh 'mvn clean package sonar:sonar'
         }
       }
       post {
@@ -103,15 +103,14 @@ pipeline {
       }
     }
 
-    // stage('Quality Gate') {
-    //   steps {
-    //     timeout(time: 2, unit: 'MINUTES') {
-    //       waitForQualityGate abortPipeline: true
-    //     }
-    //   }
-    // }
+    stage('Quality Gate') {
+      steps {
+        timeout(time: 5, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+        }
+      }
+    }
 
-  
   }
 
   post {
