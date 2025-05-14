@@ -49,20 +49,18 @@
 
 
 pipeline {
-  agent {
-    any
-  }
-  tools {
-     maven 'maven'                      
-  }
+  agent any
 
-  
   environment {
     SONARQUBE_ENV = 'sonar'
     NVD_API_KEY     = credentials('nvd-api-key') 
   }
 
- 
+  tools {
+     maven 'maven'                      
+  }
+
+  
 
   stages {
     stage('Checkout') {
@@ -76,7 +74,7 @@ pipeline {
         dependencyCheck(
           odcInstallation: 'vd',                        
           additionalArguments: '--scan ./ --format ALL', 
-          nvdCredentialsId: 'nvd-api-key'                
+          nvdCredentialsId: 'nvd-api-key'  )              
       }
       post {
         always {
