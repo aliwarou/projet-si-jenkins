@@ -163,7 +163,7 @@ pipeline {
       post {
         always {
           // on peut archiver le résumé Sonar (scanner-report.json) si besoin
-          archiveArtifacts artifacts: 'target/sonar/report-task.txt', fingerprint: true
+          archiveArtifacts artifacts: 'target/sonar/report-task.xml', fingerprint: true
         }
       }
     }
