@@ -150,8 +150,16 @@ pipeline {
     )
  
     dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+
+    post {
+        always {
+          archiveArtifacts artifacts: 'dependency-check-report.*', fingerprint: true
+        }
+      }
   }
 }
+
+
     
     stage('Analyse SonarQube (SAST)') {
       steps {
