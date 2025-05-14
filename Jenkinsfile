@@ -137,30 +137,22 @@ pipeline {
   tools {
     maven 'maven'
   }
-  stages {
+stages {
 
 
- stage("OWASP") {
-  steps {
-   
-    dependencyCheck(
-      odcInstallation: 'vd',
-      additionalArguments: '--scan ./ --format ALL',
-      nvdCredentialsId: 'nvd-api-key'    
-    )
- 
-    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-
-    post {
-        always {
-          archiveArtifacts artifacts: 'dependency-check-report.*', fingerprint: true
-        }
-      }
-  }
-}
-
-
+   stage("OWASP") {
+    steps {
     
+      dependencyCheck(
+        odcInstallation: 'vd',
+        additionalArguments: '--scan ./ --format ALL',
+        nvdCredentialsId: 'nvd-api-key'    
+      )
+  
+      dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+    }
+  }
+      
     stage('Analyse SonarQube (SAST)') {
       steps {
         withSonarQubeEnv(SONARQUBE_ENV) {
@@ -179,7 +171,7 @@ pipeline {
 
 
     
-  }
+}
 
   
 }
