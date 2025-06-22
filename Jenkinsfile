@@ -19,7 +19,7 @@ pipeline {
         dependencyCheck(
           odcInstallation: 'dependency-check',
           additionalArguments: '--scan ./ --format ALL',
-          // nvdCredentialsId: 'nvd-api-key'    
+          nvdCredentialsId: 'nvd-api-key'    
         )
     
         dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
@@ -45,16 +45,16 @@ pipeline {
       }
     }
 
-    // stage('Build') {
-    //   steps {
-    //     sh 'mvn -B clean package'
-    //   }
+    stage('Build') {
+      steps {
+        sh 'mvn -B clean package'
+      }
      
-    // }
+    }
 
      stage('Quality Gate') {
       steps {
-        timeout(time: 20, unit: 'MINUTES') {
+        timeout(time: 5, unit: 'MINUTES') {
           waitForQualityGate abortPipeline: true
         }
       }
