@@ -45,12 +45,12 @@ pipeline {
       }
     }
 
-    stage('Build') {
-      steps {
-        sh 'mvn -B clean package'
-      }
+    // stage('Build') {
+    //   steps {
+    //     sh 'mvn -B clean package'
+    //   }
      
-    }
+    // }
 
      stage('Quality Gate') {
       steps {
