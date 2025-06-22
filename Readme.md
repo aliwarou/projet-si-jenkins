@@ -1,1 +1,1 @@
-jinkins ci
+jinkins cicd
