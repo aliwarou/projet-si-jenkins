@@ -17,7 +17,7 @@ pipeline {
       steps {
       
         dependencyCheck(
-          odcInstallation: 'vd',
+          odcInstallation: 'dependency-check',
           additionalArguments: '--scan ./ --format ALL',
           nvdCredentialsId: 'nvd-api-key'    
         )
@@ -69,13 +69,13 @@ pipeline {
   
   post {
       success {
-        echo '✅ Pipeline complété avec succès !'
+        echo 'Pipeline complété avec succès !'
       }
       unstable {
-        echo '⚠️ Pipeline terminé en état instable (tests ou Quality Gate).'
+        echo 'Pipeline terminé en état instable (tests ou Quality Gate).'
       }
       failure {
-        echo '❌ Pipeline échoué ! Vérifie les rapports et logs.'
+        echo 'Pipeline échoué ! Vérifie les rapports et logs.'
       }
     }
 
